@@ -104,7 +104,6 @@ function assemble() {
   const shots = files.filter((f) => f.path.startsWith('screenshots/'));
   const manifest = {
     title: ENTRY_TITLE,
-    assembled_at: new Date().toISOString(),
     file_count: files.length,
     total_bytes: files.reduce((sum, f) => sum + f.bytes, 0),
     screenshots: { count: shots.length, files: shots.map((f) => f.path) },
