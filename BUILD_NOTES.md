@@ -76,6 +76,10 @@ shaped the module sizes.
   steal a car, drive, raise the wanted level to four stars, buy the pistol
   and fire it — state asserted after each step.
 - `MAKEFUN_OUTPUT_DIR=… node main.ts` builds the dossier inside every cap.
+- The same run writes `entry-manifest.json` into the output (after the
+  dossier, so it can never feed back into it): title, timestamp, and every
+  assembled file with its byte size — the hand-in can be diffed against the
+  repository without trusting the assembler.
 
 ## Screenshots (screenshots/, real renders via headless Chrome)
 

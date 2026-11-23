@@ -24,7 +24,7 @@ An original **3D open-world crime game** that plays offline in a desktop browser
 
 ## Entry
 
-Built for the make.fun bounty [Make GTA 6](https://make.fun/bounty/gta6-01). `main.ts` (Node 22) assembles the entry: it copies `game/` and `screenshots/` to the output directory and writes `dossier.json` via the vendored `vendor/makefun-game.ts`. Three.js (MIT) is vendored under `game/vendor/`; everything else — city, characters, vehicles, names, story, art, sound and music — is an original creation.
+Built for the make.fun bounty [Make GTA 6](https://make.fun/bounty/gta6-01). `main.ts` (Node 22) assembles the entry: it copies `game/` and `screenshots/` to the output directory and writes `dossier.json` via the vendored `vendor/makefun-game.ts`. Three.js (MIT) is vendored under `game/vendor/`; everything else — city, characters, vehicles, names, story, art, sound and music — is an original creation. Alongside the dossier, `main.ts` writes `entry-manifest.json` into the output: a plain list of every handed-in file with its byte size, so the assembled entry can be audited later without opening the game.
 
 ## Run locally
 
