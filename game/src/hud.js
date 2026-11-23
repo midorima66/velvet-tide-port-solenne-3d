@@ -1,5 +1,8 @@
 // The HUD: health, cash, wanted stars, clock, weapon, speed, the mission banner,
 // the dialogue box, the BUSTED meter and the live circular minimap.
+// It writes only to the DOM and reads only the world, once per frame — the
+// minimap is plotted from the same VX/HZ grid the city itself is built on,
+// so the map in the corner can never quietly disagree with the streets.
 import { VX, HZ, LAND, HEAT } from './config.js';
 import { missionBanner } from './missions.js';
 

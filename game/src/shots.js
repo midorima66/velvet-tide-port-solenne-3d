@@ -1,6 +1,9 @@
 // Staged screenshot scenes (?shot=start|foot|chase|mission&seed=7). Each one is a
 // real moment of the game, arranged: the same world, the same rules, scripted
 // hands. main.js runs the normal loop; shots only set the stage.
+// A shot is not a render mode: nothing here freezes the world, swaps in
+// artwork or skips the physics — the frame the camera takes is a frame the
+// game genuinely played, which is why the screenshots can be trusted.
 import { startStory } from './missions.js';
 import { addHeat } from './world.js';
 
@@ -60,6 +63,15 @@ export function setupShot(world, name) {
     p.mesh.visible = false;
     p.x = car.x; p.z = car.z;
     world.clockMinutes = 19 * 60 + 5;
+    return 'play';
+  }
+  if (name === 'beach') {
+    startStory(world);
+    // The east-shore sand (x 688–760, water beyond): among the palms,
+    // facing east over the water as the light goes.
+    p.x = 712; p.z = 270;
+    p.heading = Math.PI / 2;
+    world.clockMinutes = 18 * 60 + 20;
     return 'play';
   }
   return null;

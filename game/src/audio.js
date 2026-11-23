@@ -1,5 +1,9 @@
 // Fully synthesized WebAudio: engine hum, police sirens, a slow synthwave music loop
 // and every one-shot effect. No audio files exist; M toggles mute.
+// Every voice runs through the one master gain below, so muting is a single
+// node at zero and no siren can leak past it. Engine and siren are continuous
+// voices steered per frame (setEngine / setSiren); everything else is a
+// one-shot struck through sfx and forgotten.
 
 let ctx = null;
 let master = null;

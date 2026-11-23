@@ -3,6 +3,9 @@
 // Lighthouse — and reports the collision boxes, named places and lane data the
 // simulation needs. Geometries and materials are shared; houses, containers,
 // trees and lamps are instanced, so the whole city costs a few hundred draws.
+// buildCity runs once at boot; after that the city is read-only — the places,
+// lanes and colliders it returns are the one description every other module
+// navigates by, so the map, the AI and the physics can never disagree.
 import * as THREE from 'three';
 import { VX, HZ, ROAD_W, SIDEWALK, LAND, CAR_COLORS } from './config.js';
 import { mulberry32, rngRange, rngInt, rngPick } from './random.js';

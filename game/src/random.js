@@ -1,4 +1,6 @@
 // A tiny seeded RNG (mulberry32): one seed rebuilds the same city, traffic and shots.
+// Determinism is load-bearing, not a convenience: the staged screenshots and the
+// test rig pin seed 7, so a scene that passed once renders identically on a rerun.
 
 export function mulberry32(seed) {
   let a = seed >>> 0;

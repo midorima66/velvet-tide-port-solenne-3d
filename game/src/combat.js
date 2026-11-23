@@ -1,6 +1,9 @@
 // Fists and the Harbor Arms pistol. Shots are manual raycasts — ray vs building
 // boxes, ray vs body spheres — so a miss costs nothing but noise, and noise has
 // a price: everyone nearby runs, and the police remember gunfire.
+// tryAttack is the whole public surface: one call resolves the swing or the
+// shot, hurts what it hits through ai.js, and raises exactly the alarm the
+// noise earns — the consequences arrive as cruisers, not as hit points.
 import * as THREE from 'three';
 import { PLAYER, WEAPON, HEAT } from './config.js';
 import { addHeat, burst } from './world.js';

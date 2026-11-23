@@ -1,6 +1,9 @@
 // Traffic that keeps its lane and turns at junctions, police that hunt the
 // player across the grid, and pedestrians who stroll the pavements and flee
 // from danger. Everyone shares the arcade physics in world.js.
+// All three behaviours read the same world state and the same street grid —
+// there is no second, private map for the police. panic() and hurtPed() are
+// the doors combat knocks on when a quiet street has to react to violence.
 import { VX, HZ, ROAD_W, LANE, LAND, HEAT } from './config.js';
 import { integrateCar, addHeat, burst } from './world.js';
 import { rngRange, rngPick } from './random.js';

@@ -1,5 +1,7 @@
 // Velvet Tide: Port Solenne 3D — every tuning number, street and colour in one place.
 // The world is measured in metres. Streets run on a grid: VX west→east, HZ north→south.
+// Nothing here imports anything or holds state: if a value feels wrong in play, the
+// fix is a number in this file, not a hunt through the simulation.
 
 export const STEP = 1 / 60;
 

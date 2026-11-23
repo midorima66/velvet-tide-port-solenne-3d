@@ -1,6 +1,9 @@
 // Velvet Tide: Port Solenne 3D — boot, the fixed-step loop, the third-person
 // camera, the day-night cycle, screens, saving. The simulation lives in
 // world.js / ai.js / combat.js / missions.js; this file conducts it.
+// It owns no rules of its own: each frame it advances the simulation in
+// STEP-sized slices, points the camera, and ferries state between the world
+// and the DOM screens — a rule that lives here would be a rule in two places.
 import * as THREE from 'three';
 import { STEP, CLOCK, SAVE_KEY, WEAPON } from './config.js';
 import { buildCity } from './city.js';

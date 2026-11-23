@@ -4,6 +4,9 @@
 // a crate from the docks, fares across town, a hot car, three debts, and one
 // last drive to the lighthouse. Between missions the city is free to roam;
 // the gold marker always points at the next chapter.
+// Progress is chapter-and-stage only, and that smallness is deliberate: it is
+// everything a save file has to remember, so resumeStory can drop Marlo back
+// at the current chapter's doorstep without replaying the whole evening.
 import { HEAT } from './config.js';
 import { EV, addHeat } from './world.js';
 

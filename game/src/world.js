@@ -1,6 +1,9 @@
 // The living state of Port Solenne: Marlo, every car and pedestrian, the wanted
 // heat, police pressure, and the busted/wasted verdicts. Rendering lives in the
 // meshes each entity carries; the rules live here and in ai.js / combat.js.
+// If it moves, heats up or can be stolen, its state sits in the world object
+// built here — and things that happen leave as the EV bit flags below, so the
+// conductor in main.js reacts to events instead of polling everyone's internals.
 import * as THREE from 'three';
 import { VX, HZ, ROAD_W, LANE, LAND, PLAYER, CAR, POP, HEAT, CAR_COLORS, PED_COLORS, SKIN_COLORS } from './config.js';
 import { mulberry32, rngRange, rngInt, rngPick } from './random.js';

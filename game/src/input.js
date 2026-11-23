@@ -1,5 +1,8 @@
 // Keyboard and mouse as a sampled state the simulation reads each fixed step.
 // One-shot actions (interact, attack, pause…) are latched until consumed.
+// The simulation never sees a DOM event: it polls down()/axis() for what is
+// held and consume() for what was pressed, and a latch is cleared by being
+// consumed — never by a timer — so a press can never expire mid-frame.
 
 const keys = new Set();
 const latched = new Set();
