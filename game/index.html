@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Velvet Tide: Port Solenne 3D</title>
+<link rel="icon" href="data:,">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #10131c; }
+  body { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; color: #f5efe2; }
+  #app { position: fixed; inset: 0; }
+  #app canvas { display: block; }
+  .hidden { display: none !important; }
+
+  /* ---------- HUD ---------- */
+  #hud { position: fixed; inset: 0; pointer-events: none; z-index: 5; }
+  #hud-tl { position: absolute; top: 16px; left: 18px; width: 230px; }
+  #health-wrap { height: 14px; background: rgba(10,12,20,.72); border: 1px solid rgba(245,239,226,.35); border-radius: 7px; overflow: hidden; }
+  #health-fill { height: 100%; width: 100%; background: #7dd069; transition: width .18s; }
+  #hud-row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 6px; }
+  #cash { font-size: 22px; font-weight: 700; color: #7dd069; text-shadow: 0 1px 3px #000; }
+  #stars { font-size: 19px; letter-spacing: 2px; color: #f2c94c; text-shadow: 0 1px 3px #000; }
+  #stars .off { color: rgba(245,239,226,.28); }
+  #hud-tr { position: absolute; top: 16px; right: 18px; text-align: right; }
+  #clock { font-size: 20px; font-weight: 600; text-shadow: 0 1px 3px #000; }
+  #weapon { font-size: 14px; color: #b9b2a2; margin-top: 3px; text-shadow: 0 1px 3px #000; }
+  #speed { position: absolute; right: 22px; bottom: 20px; font-size: 30px; font-weight: 700; text-shadow: 0 2px 4px #000; }
+  #speed small { font-size: 13px; color: #b9b2a2; }
+  #banner { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); text-align: center; max-width: 560px; }
+  #banner-title { display: inline-block; background: rgba(16,18,28,.82); border: 1px solid rgba(242,201,76,.55); color: #f2c94c;
+                 padding: 5px 16px; border-radius: 16px; font-size: 15px; font-weight: 700; letter-spacing: .4px; }
+  #banner-line { margin-top: 6px; font-size: 14.5px; color: #f5efe2; text-shadow: 0 1px 4px #000, 0 0 12px rgba(0,0,0,.6); }
+  #minimap { position: absolute; left: 18px; bottom: 18px; width: 190px; height: 190px; border-radius: 50%;
+             border: 2px solid rgba(245,239,226,.4); background: #274b5c; box-shadow: 0 4px 18px rgba(0,0,0,.5); }
+  #dialogue { position: absolute; left: 50%; bottom: 108px; transform: translateX(-50%); width: 620px; max-width: 86vw;
+              background: rgba(16,18,28,.88); border: 1px solid rgba(245,239,226,.25); border-left: 4px solid #f2c94c;
+              border-radius: 8px; padding: 12px 18px; }
+  #dlg-name { color: #f2c94c; font-weight: 700; font-size: 14px; letter-spacing: .6px; text-transform: uppercase; }
+  #dlg-text { font-size: 17px; line-height: 1.45; margin-top: 3px; }
+  #prompt { position: absolute; left: 50%; bottom: 66px; transform: translateX(-50%); font-size: 15px; color: #f5efe2;
+            background: rgba(16,18,28,.75); padding: 5px 14px; border-radius: 13px; }
+  #busted-wrap { position: absolute; left: 50%; bottom: 150px; transform: translateX(-50%); width: 260px; text-align: center; }
+  #busted-wrap .lbl { color: #e5534b; font-weight: 800; letter-spacing: 3px; font-size: 15px; text-shadow: 0 1px 4px #000; }
+  #busted-bar { height: 9px; background: rgba(10,12,20,.7); border: 1px solid rgba(229,83,75,.7); border-radius: 5px; overflow: hidden; margin-top: 4px; }
+  #busted-fill { height: 100%; width: 0%; background: #e5534b; }
+  #obj-arrow { position: absolute; width: 0; height: 0; border-left: 11px solid transparent; border-right: 11px solid transparent;
+               border-bottom: 20px solid #f2c94c; filter: drop-shadow(0 1px 3px rgba(0,0,0,.8)); }
+  #obj-dist { position: absolute; color: #f2c94c; font-size: 13px; font-weight: 700; text-shadow: 0 1px 3px #000; transform: translate(-50%, 0); }
+
+  /* ---------- Screens ---------- */
+  .screen { position: fixed; inset: 0; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; background: radial-gradient(ellipse at center, rgba(10,8,18,.28) 0%, rgba(10,8,18,.78) 100%); }
+  .screen h1 { font-size: 74px; letter-spacing: 8px; font-weight: 800; color: #f5efe2; text-shadow: 0 4px 24px rgba(0,0,0,.8); }
+  .screen h1 .tide { color: #53e0d4; }
+  .screen h2 { font-size: 21px; letter-spacing: 5px; color: #f2c94c; font-weight: 600; margin-top: 2px; }
+  .screen p { max-width: 560px; font-size: 16.5px; line-height: 1.55; color: #e8e2d2; margin-top: 18px; text-shadow: 0 1px 6px #000; }
+  .screen .controls { margin-top: 14px; font-size: 13.5px; color: #b9b2a2; line-height: 1.7; }
+  .btn { pointer-events: auto; cursor: pointer; margin-top: 22px; background: #f2c94c; color: #20242e; border: 0; border-radius: 8px;
+         font-size: 18px; font-weight: 800; letter-spacing: 1px; padding: 12px 38px; box-shadow: 0 6px 20px rgba(0,0,0,.5); }
+  .btn:hover { background: #ffd968; }
+  .btn.ghost { background: rgba(16,18,28,.8); color: #f5efe2; border: 1px solid rgba(245,239,226,.4); }
+  #screen-verdict { background: rgba(8,4,6,.45); }
+  #verdict-word { font-size: 84px; font-weight: 900; letter-spacing: 14px; color: #e5534b; text-shadow: 0 4px 30px rgba(0,0,0,.9); }
+  #verdict-word.wasted { color: #d8d8d8; }
+  #verdict-sub { font-size: 17px; color: #f5efe2; margin-top: 8px; text-shadow: 0 1px 6px #000; }
+  #vignette { position: fixed; inset: 0; pointer-events: none; z-index: 4;
+              background: radial-gradient(ellipse at center, transparent 58%, rgba(10,6,18,.42) 100%); }
+</style>
+<script type="importmap">
+{ "imports": { "three": "./vendor/three.module.min.js" } }
+</script>
+</head>
+<body>
+<div id="app"></div>
+<div id="vignette"></div>
+
+<div id="hud" class="hidden">
+  <div id="hud-tl">
+    <div id="health-wrap"><div id="health-fill"></div></div>
+    <div id="hud-row"><div id="cash">$0</div><div id="stars"></div></div>
+  </div>
+  <div id="hud-tr">
+    <div id="clock">17:40</div>
+    <div id="weapon">Fists</div>
+  </div>
+  <div id="banner">
+    <div id="banner-title">Free roam</div>
+    <div id="banner-line"></div>
+  </div>
+  <canvas id="minimap" width="190" height="190"></canvas>
+  <div id="busted-wrap" class="hidden">
+    <div class="lbl">BUSTED</div>
+    <div id="busted-bar"><div id="busted-fill"></div></div>
+  </div>
+  <div id="dialogue" class="hidden">
+    <div id="dlg-name"></div>
+    <div id="dlg-text"></div>
+  </div>
+  <div id="prompt" class="hidden"></div>
+  <div id="speed" class="hidden">0 <small>km/h</small></div>
+  <div id="obj-arrow" class="hidden"></div>
+  <div id="obj-dist" class="hidden"></div>
+</div>
+
+<div id="screen-title" class="screen">
+  <h1>VELVET <span class="tide">TIDE</span></h1>
+  <h2>PORT SOLENNE · 3D</h2>
+  <p>Marlo Reyes swore he was done. Then he came home to Port Solenne, and Auntie Vi
+     of the Tidewater Diner put him back to work: a crate, three fares, one hot coupe,
+     three debts — and a last drive to Gull Rock Lighthouse.</p>
+  <button class="btn" id="btn-start">START ENGINE</button>
+  <button class="btn ghost hidden" id="btn-continue">CONTINUE — <span id="continue-label"></span></button>
+  <div class="controls">
+    WASD / arrows — walk &amp; drive · Mouse — look &amp; aim · Click — punch / shoot<br>
+    E — enter / exit car · Shift — run · 1 / 2 — fists / pistol · P — pause · K — save · M — mute
+  </div>
+</div>
+
+<div id="screen-pause" class="screen hidden">
+  <h1>PAUSED</h1>
+  <p>The tide waits for no one. Except now.</p>
+  <button class="btn" id="btn-resume">BACK TO THE CITY</button>
+</div>
+
+<div id="screen-verdict" class="screen hidden">
+  <div id="verdict-word">BUSTED</div>
+  <div id="verdict-sub"></div>
+</div>
+
+<div id="screen-complete" class="screen hidden">
+  <h1>HOME.</h1>
+  <h2>THE LONG GOODBYE — COMPLETE</h2>
+  <p id="complete-stats"></p>
+  <button class="btn" id="btn-roam">KEEP ROAMING</button>
+</div>
+
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
